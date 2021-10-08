@@ -14,7 +14,20 @@ export default class UserRouter {
         this.app.use(this.router)
 
         this.router.get("/users/:id", (req: Request, res: Response) => {
-            
+            const userID = req.params.id
+
+            if(!userID) {
+                res.status(500).send("Please Write The ID")
+                return;
+            }
+
+            this.db.query(`SELECT * FROM Users WHERE id = ${userID}`, 
+            function (err, data) {
+                res.status(200).json({
+                    username: data[0].username,
+                    email: data[0].email
+                })
+            })
         })
     }
 }
